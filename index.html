@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="araomasakiが制作したグラフィックデザインのギャラリーサイト">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&display=swap" rel="stylesheet">
+    <title>ARCHIVE Graphic Design Collection</title>
+</head>
+
+<body>
+    <!-- 動く背景 -->
+    <canvas id="canvas"></canvas>
+
+    <!-- トグルスイッチ -->
+    <header>
+        <label class="toggle-switch">
+            <input type="checkbox">
+        </label>
+    </header>
+    
+    <main>
+        <div id="js-circle-gallery" class="circle-gallery">
+            <div class="circle-inner" id="js-circle-inner"></div>
+        </div>
+
+        <div class="contents-container">
+            <div class="display-side">
+                <h1>
+                    ARCHIVE<span class="sub-btitle">Graphic Design Collection</span>
+                </h1>
+                
+                <div class="main-display" id="js-main-display">
+                    <img class="displayImage" src="" alt="作品画像">
+                </div>
+            </div>
+
+            <div class="list-side">
+                <div class="collection-tab">
+                    <span class="tab-number">Page</span>
+                    <span class="tab-genre">Genre</span>
+                    <span class="tab-title">Title</span>
+                </div>
+
+                <ul class="work-list">
+                    <li class="work-item" data-img="./img/graphic_No1.png">
+                        <span class="work-number">#01</span>
+                        <span class="work-genre">Photomontage</span>
+                        <span class="work-title">"Eye"</span>
+                    </li>
+                    <li class="work-item" data-img="img/graphic_No2.jpg">
+                        <span class="work-number">#02</span>
+                        <span class="work-genre">Photomontage</span>
+                        <span class="work-title">"Eye"</span>
+                    </li>
+                    <li class="work-item" data-img="img/graphic_No3.jpg">
+                        <span class="work-number">#03</span>
+                        <span class="work-genre">Photomontage</span>
+                        <span class="work-title">"Eye"</span>
+                    </li>
+                    <li class="work-item" data-img="img/graphic_No4.png">
+                        <span class="work-number">#04</span>
+                        <span class="work-genre">Photomontage</span>
+                        <span class="work-title">"Eye"</span>
+                    </li>
+                    <li class="work-item" data-img="img/graphic_No5.png">
+                        <span class="work-number">#05</span>
+                        <span class="work-genre">Photomontage</span>
+                        <span class="work-title">"Eye"</span>
+                    </li>
+                    <li class="work-item" data-img="img/graphic_No6.png">
+                        <span class="work-number">#06</span>
+                        <span class="work-genre">Photomontage</span>
+                        <span class="work-title">"Eye"</span>
+                    </li>
+                    <li class="work-item" data-img="img/graphic_No7.png">
+                        <span class="work-number">#07</span>
+                        <span class="work-genre">Photomontage</span>
+                        <span class="work-title">"Eye"</span>
+                    </li>
+                    <li class="work-item" data-img="img/graphic_No8.png">
+                        <span class="work-number">#08</span>
+                        <span class="work-genre">Photomontage</span>
+                        <span class="work-title">"Eye"</span>
+                    </li>
+                    <li class="work-item" data-img="img/graphic_No9.png">
+                        <span class="work-number">#09</span>
+                        <span class="work-genre">Photomontage</span>
+                        <span class="work-title">"Eye"</span>
+                    </li>
+                    <li class="work-item" data-img="img/graphic_No10.png">
+                        <span class="work-number">#10</span>
+                        <span class="work-genre">Photomontage</span>
+                        <span class="work-title">"Eye"</span>
+                    </li>
+                    <li class="work-item" data-img="img/graphic_No11.png">
+                        <span class="work-number">#11</span>
+                        <span class="work-genre">Photomontage</span>
+                        <span class="work-title">"Eye"</span>
+                    </li>
+                    <li class="work-item" data-img="img/graphic_No12.png">
+                        <span class="work-number">#12</span>
+                        <span class="work-genre">Photomontage</span>
+                        <span class="work-title">"Eye"</span>
+                    </li>
+                    <li class="work-item" data-img="img/graphic_No13.png">
+                        <span class="work-number">#13</span>
+                        <span class="work-genre">Photomontage</span>
+                        <span class="work-title">"Eye"</span>
+                    </li>
+                    <li class="work-item" data-img="img/graphic_No14.png">
+                        <span class="work-number">#14</span>
+                        <span class="work-genre">Photomontage</span>
+                        <span class="work-title">"Eye"</span>
+                    </li>
+                    <li class="work-item" data-img="img/graphic_No15.png">
+                        <span class="work-number">#15</span>
+                        <span class="work-genre">Photomontage</span>
+                        <span class="work-title">"Eye"</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+   <div class="text-wrapper" role="button" aria-label="言語切り替え">
+  <span class="lang-en">Focusing on grid systems and photomontage, I pursue the creation of multi-layered visuals. Currently, I am honing my craft at a design school to transition into a career as a Web Designer. I invite you to explore my latest expressions, articulated through the new language of design.</span><!-- デフォルトの文字 -->
+  <span class="lang-ja">グリッドシステムとフォトモンタージュを軸に、多層的なビジュアルを構築するデザインを追求しています。現在はWebデザイナーとしてのキャリアを見据え、デザインスクールにて研鑽を積んでいます。デザインという新しい言語を手に入れた、今の私の表現をぜひご覧ください。</span><!-- ホバー時に表示する文字 -->
+  </div>
+
+
+</main>
+    <footer class="footer-container">
+        <div class="footer-info">
+            <div class="location">Based in Tokyo, Japan</div>
+            <div class="tel">T. +81 80 9145 8396</div>
+            <div class="mail">E.  a.masaki10231023@gmail.com</div>
+            <div class="copyright">&copy;a.masaki</div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        const workItems = document.querySelectorAll('.work-item');
+
+        workItems.forEach(item => {
+            item.addEventListener('click', () => {
+                workItems.forEach(el => el.classList.remove('is-selected'));
+                item.classList.add('is-selected');
+            });
+        });
+    });
+    </script>
+</body>
+</html>
