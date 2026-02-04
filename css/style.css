@@ -1,0 +1,1012 @@
+@charset "utf-8";
+
+html{
+    font-size: 62.5%; /* 1rem = 10px */
+    box-sizing: border-box; /* レイアウト崩れ防止 */
+    -webkit-text-size-adjust: 100%; /* iPhone用 */
+    margin: 0;
+}
+
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit; 
+}
+
+body{
+    margin: 0;
+    padding: 0 30px;
+    overflow: hidden;
+    
+    font-size: larger;
+    font-family: "Shippori Mincho", "Yu Mincho", "YuMincho", "Hiragino Mincho ProN", serif;
+    font-weight: 400;
+    line-height: 1.8;
+    color: #000;
+    background-color: transparent;    
+}
+
+.shippori-mincho-regular {
+    font-family: "Shippori Mincho", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.shippori-mincho-bold {
+    font-family: "Shippori Mincho", serif;
+    font-weight: 700;
+    font-style: normal;
+}
+
+#canvas {
+    position: fixed;
+    z-index: -1;
+    top: 0;         
+    left: 0;       
+    width: 100%;
+    height: 100dvh;
+    pointer-events: none;
+    object-fit: cover;
+    background-color: #fff;
+}
+
+/* トグルスイッチ */
+.toggle-switch{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    position: relative;
+    box-sizing: content-box;
+    cursor: pointer;
+    transition: background-color .4s;
+
+    width: 45px;
+    height: 2px;
+
+    margin-left: auto;
+    margin-top: 20px;
+    margin-right: 50px;
+
+    border-radius: 50px;
+    font-size: 1rem;
+    background-color: #A0A0A0;
+    z-index: 1200;
+}
+
+.toggle-switch:has(:checked) {
+    background-color: #A0A0A0
+}
+
+
+.toggle-switch::before{
+    position: absolute;
+    left: 0px;
+    width: 17px;
+    height: 17px;
+    border-radius: 20px;
+    background-color: #A0A0A0;
+    content: '';
+    transition: left .4s;
+}
+
+.toggle-switch:has(:checked)::before {
+    left: 28px;
+    background-color: #98CE44;
+}
+
+.toggle-switch::after {
+    position: absolute;
+    left: 19px;
+    transform: translateX(-50%);
+    color: #fff;
+    font-weight: 600;
+    font-size: 1em;
+    transition: left .4s;
+}
+
+.toggle-switch:has(:checked)::after {
+    left: 53px;
+}
+
+.toggle-switch input {
+    display: none;
+}
+
+main{
+    max-width: 100%;
+    width: 100%;
+    margin: 20px 0 0 0;
+    padding: 0 30px;
+    
+    border-top: 0.5px solid #333;
+    background-color: transparent;
+    
+}
+
+.contents-container{
+    display: flex;
+    justify-content: space-between; 
+    align-items: flex-start;
+    gap: 40px ; 
+    width: 100%;
+    margin: 0 auto;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+/* 画面右 */
+.display-side{
+    flex: 0 0 650px;
+    min-width: 0; 
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 20px;
+
+    height:auto; 
+    min-height: auto;
+}
+
+.list-side {
+    flex: 0 1 auto; 
+    width: auto;
+    max-width: 610px; 
+    min-width: 320px; 
+    padding-right: 160px; 
+}
+
+/* 画面左 */
+h1 {
+    position: relative;
+    z-index: 2;
+    display: flex; 
+    flex-wrap: wrap; 
+    align-items: baseline; 
+    gap: 10px; 
+    
+    text-align: left;
+    pointer-events: none;
+    font-size: clamp(3rem, 9vw, 10rem);
+    font-weight: 700;
+    line-height: 1; 
+
+    margin: 75px 0 0 30px;
+}
+
+.sub-btitle {
+    display: inline-block;
+    font-size: 0.45em; 
+    margin-left: 0; 
+    line-height: 1;
+}
+
+.close-tab{
+    display: none;
+    text-align: left;
+    margin-top: 10px;
+    font-size: 1.2rem;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.is-hidden {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    transition: opacity 0.4s ease;
+}
+
+.main-display {
+    position: absolute; 
+    top: 50px; 
+    left: 135px; 
+    width: 100%;    
+    max-width: 480px; 
+    z-index: 5000;   
+
+    /* アニメーション */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px); /* 少し下から浮き上がる演出 */
+    transition: 
+    opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), 
+    transform 0.8s cubic-bezier(0.25, 1, 0.5, 1),
+    visibility 0.8s;
+    
+    pointer-events: none;
+}
+
+.main-display.is-active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    cursor: auto;
+}
+
+.displayImage {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+
+    object-fit: cover;
+    display: block;
+
+    transition: max-height 0.3s ease;
+}
+
+.main-display.is-active {
+    opacity: 1;
+}
+
+/* リスト */
+.collection-tab{
+    max-width: 435px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+}
+
+.work-list{
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+
+    max-width: 250px;
+    width: 100%;
+    margin-top: 50px;
+    padding: 0;
+    gap: 9px;
+    font-size: 2rem;
+}
+
+.collection-tab,.work-item{
+    display: grid;
+    grid-template-columns: 70px 125px 1fr;
+    cursor: pointer;
+}
+
+.work-item {
+    position: relative; 
+    align-items: center; 
+}
+
+.work-item span {
+    white-space: nowrap;
+}
+
+.work-item.is-selected::before {
+    content: "▶︎";
+    position: absolute;
+    left: -25px; 
+    margin-top: 1px;
+    font-size: 1.2rem; 
+    color: #333;      
+}
+
+
+/* 英日テキスト */
+.text-wrapper {
+    border-top: 0.5px solid #333; 
+    padding-top: 5px;
+    cursor: pointer;
+    position: absolute;
+    display: block;
+    overflow: hidden;
+    justify-self: start; 
+    align-self: center;  
+    
+    width: 100%;
+    max-width: 370px; 
+    height: 130px;  
+    min-height: 100px; 
+
+    margin-left: 30px;
+    margin-top: 40px; 
+    margin-bottom: 180px;
+}
+
+.text-wrapper span {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box; 
+    
+    text-align: left;
+    color: #000;
+    font-size: 1.4rem;
+    line-height: 1.3;
+    
+    transition: all 0.5s ease-in-out;
+}
+
+.lang-en {
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 1;
+}
+
+.lang-ja {
+    top: -150%; 
+    transform: translateY(-50%);
+    opacity: 0;
+    font-family: YuMincho;
+}
+
+.text-wrapper:hover .lang-en {
+    top: -50%;
+    opacity: 0;
+}
+
+.text-wrapper:hover .lang-ja {
+    top: 50%;
+    opacity: 1;
+}
+
+/* footer */
+.footer-container{
+   position: fixed; 
+    bottom: 0;       
+    left: 0;
+    width: 100%;     
+    z-index: 1000;   
+    background-color: transparent; 
+    margin-top: 0;
+}
+.footer-info{
+    display: flex;
+    justify-content: flex-start;
+    align-items: baseline;
+
+    width: auto;
+    margin: 0 30px 10px 30px;
+    padding: 30px 0 0 60px;
+    gap: 60px;
+    
+    font-size: 1.3rem;
+    border-top: 0.5px solid #333;
+}
+
+.footer-info .copyright {
+    margin-left: auto;
+    font-size: 1rem;
+}
+
+body:has(.toggle-switch input:checked) {
+    background-color: #f5f2ed; 
+}
+
+#canvas {
+    transition: opacity 0.5s ease;
+}
+
+/* 2. 背景Canvasを消す */
+body.is-visual-mode #canvas {
+    opacity: 0;
+}
+/* --- 1. 背景画像グリッド（4*4配置） --- */
+#bg-image-grid-right {
+    position: fixed;
+    top: 50%;
+    right: 5%;
+    transform: translateY(-50%);
+    width: 500px; 
+    max-width: 60%;         
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 10px;
+    z-index: 1100;
+    
+    /* 初期状態は非表示 */
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none; 
+    transition: opacity 0.6s ease, visibility 0.6s ease, filter 0.5s ease;
+}
+
+/* JSで .is-active が付与されたら表示 */
+#bg-image-grid-right.is-active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto; 
+}
+
+.grid-item {
+    width: 100%;
+    aspect-ratio: 2 / 3; 
+    overflow: hidden;
+    background: rgba(0,0,0,0.02);
+    cursor: pointer;
+    position: relative; 
+}
+
+.grid-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(100%);  
+    opacity: 0.8;             
+    transition: filter 0.5s ease, transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease;
+    will-change: filter, transform;
+}
+
+.grid-item:hover img {
+    filter: grayscale(0%);    
+    opacity: 1;               
+    transform: scale(1.1);    
+}
+
+/* ホバー中、他の画像を暗くする */
+#bg-image-grid-right:hover .grid-item:not(:hover) img {
+    opacity: 0.4; 
+    filter: grayscale(100%) brightness(0.7);
+}
+
+/* --- 2. モード切り替え時の表示制御 --- */
+/* 通常の拡大表示（Listモード用）の設定 */
+.main-display {
+    transition: opacity 0.6s ease, visibility 0.6s ease, transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Visualモード（オン）になった時の基本状態 */
+body.is-visual-mode .list-side,
+body.is-visual-mode #canvas {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+/* Visualモード（オン）での拡大画像配置 */
+body.is-visual-mode .main-display {
+    position: fixed;
+    left: 90px; 
+    top: 50%;
+    right: auto;
+    width: 500px; 
+    max-width: 60%;
+    height: auto;
+    z-index: 9999; 
+    display: block;
+    pointer-events: auto;
+    /* 拡大アニメーションの準備 */
+    transform: translateY(-50%) scale(0.95);
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Visualモードで画像がクリックされた時（.is-active） */
+body.is-visual-mode .main-display.is-active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(-50%) scale(1);
+}
+
+/* --- 3. 画像拡大中の周辺エフェクト --- */
+
+/* タイトルを隠す */
+body:has(.main-display.is-active) h1,
+body:has(.main-display.is-active) .text-wrapper{
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease;
+}
+
+/* 背景グリッドを暗く・ぼかす */
+body.is-visual-mode:has(.main-display.is-active) #bg-image-grid-right {
+    filter: brightness(0.6) blur(1px);
+    pointer-events: none;
+}
+
+/* 画像自体の装飾 */
+body.is-visual-mode .main-display .displayImage {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.2);
+}
+
+
+/* --- 大画面（MacBook Pro / デスクトップ）対応 --- */
+@media screen and (min-width: 1600px){
+main {
+    max-width: 1800px;
+    margin: 20px auto 0; 
+    padding: 0 80px;
+}
+
+h1 {
+    font-size: 12rem; 
+    margin-top: 100px;
+    margin-left: 80px; 
+}
+
+.sub-btitle {
+    font-size: 0.4em; 
+}
+
+.main-display {
+    display: block !important; 
+    position: fixed; 
+    top: 50%;
+    left: 30%;
+    transform: translate(-50%, -50%); 
+    
+    width: 90%;      
+    max-width: 580px; 
+    height: auto;
+    
+    z-index: 5;     
+    pointer-events: none;
+    
+    opacity: 0;
+    visibility: hidden;
+}
+
+.text-wrapper {
+    max-width: 400px; 
+    height: 160px;    
+    margin-left: 80px;
+}
+
+.text-wrapper span {
+    font-size: 1.4rem;
+    line-height: 1.8;
+}
+
+.work-list {
+    max-width: 600px; 
+    gap: 12px;      
+}
+
+.work-item {
+    font-size: 2.4rem;
+}
+
+.collection-tab {
+    font-size: 1.2rem; 
+    margin-bottom: 10px;
+}
+
+.collection-tab,.work-item{
+    grid-template-columns: 100px 200px 1fr;
+}
+
+.footer-info {
+    font-size: 1.5rem; 
+    padding-left: 130px;
+    gap: 80px;        
+}
+
+.footer-info .copyright {
+    font-size: 1.1rem; 
+}
+}
+
+
+/* --- 中間サイズ（タブレット・ブラウザ小窓）対応 --- */
+@media screen and (min-width: 481px) and (max-width: 1100px) {
+body {
+    /* モバイル同様、画面の高さに合わせる設定を追加 */
+    overflow: hidden;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    padding: 0 20px;
+}
+
+.toggle-switch {
+    display: none !important;
+}
+main {
+    /* 小サイズと同じ構造を適用 */
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; 
+    
+    padding-left: 0;
+    padding-right: 0;
+    margin-top: 50px;
+    border-top: 0.5px solid #333;
+}
+
+.contents-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+    gap: 0;
+    padding: 0;
+    align-items: start;
+}
+
+/* 画面左 */
+.display-side {
+        flex: none;      
+        width: 100%;     
+        min-width: 0;    
+        padding-left: 0px;
+}
+    
+.close-tab{
+    display: block;
+    visibility: visible;
+    opacity: 1;
+}
+
+/* 画面右 */
+h1 {
+    margin-top: 60px;
+    margin-left: 25px;
+    font-size: clamp(2rem, 5vw, 3rem); 
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    line-height: 1.1;
+}
+
+.sub-btitle {
+    display: block;
+    margin-top: 5px;
+    font-size: clamp(1.2rem, 4vw, 1.5rem);
+}
+
+.collection-tab {
+    font-size: 1rem; 
+    margin-bottom: 10px;
+}
+
+.list-side {
+    flex: none;      
+    width: 100%;    
+    max-width: none;
+    min-width: 0;
+
+    margin: 0;
+    padding-left: 20px; 
+    padding-right: 0;
+}
+
+.work-item {
+    font-size: 1.5rem;
+    grid-template-columns: 120px 240px auto; 
+}
+
+
+.collection-tab,.work-item{
+    grid-template-columns: 50px 80px auto;
+    width: 100%;
+}
+
+.work-list {
+    max-width: 100%;
+    margin-top: 40px;
+    gap: 4px;
+}
+
+.main-display {
+    display: block !important; 
+    position: fixed; 
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    
+    width: 90%;      
+    max-width: 380px; 
+    height: auto;
+    
+    z-index: 5;     
+    pointer-events: none;
+    
+    opacity: 0;
+    visibility: hidden;
+}
+
+.close-tab{
+    display: block;
+    visibility: visible;
+    opacity: 1;
+    margin-top: 5px;
+    font-size: 0.8rem;
+}
+
+/* テキストラッパーの余白調整 */
+.text-wrapper {
+    position: relative;
+    display: block;
+
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    min-height: 80px;
+
+    margin: 0px auto 0 0 !important;
+    border-top: none;
+    cursor: pointer;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.text-wrapper span {
+    position: absolute;
+    display: block;
+    
+    width: 100%;
+    left: 0;
+    right: 0;
+
+    font-size: 1rem;
+    line-height: 1.3;
+}
+
+.footer-container {
+    position: relative; 
+    width: 100%;
+    flex-shrink: 0;
+    margin-top: auto; 
+}
+
+.footer-info {
+    display: flex;
+    flex-direction: row !important; 
+    justify-content: flex-start;    
+    align-items: baseline;          
+
+    padding: 20px 40px 20px 40px;         
+    margin: 0;
+    gap: 30px;                    
+
+    font-size: 1rem; 
+    border-top: 0.5px solid #333;
+}
+
+.footer-info .copyright {
+    margin-left: auto;
+    margin-top: 0;
+    text-align: right !important;
+    font-size: 0.8rem;
+}
+
+/* 表示非表示要素 */
+.contents-container:has(.main-display.is-active) .list-side .collection-tab,
+.contents-container:has(.main-display.is-active) .list-side .work-list {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+.text-wrapper {
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+        z-index: 10; /* 画像より上にくるように調整 */
+    }
+}
+
+
+/* --- モバイル対応 (480px未満) --- */
+@media screen and (max-width: 480px) {
+.toggle-switch {
+    display: none !important;
+}
+
+body {
+    padding: 10px 20px;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+    position: relative; 
+    display: flex;
+    flex-direction: column;
+}
+
+.contents-container {
+   display: flex; 
+    justify-content: space-between; 
+    align-items: flex-start;
+    width: 100%;
+    padding: 0;
+    gap: 10px; 
+}
+
+.image-container {
+    flex: 1;
+    min-width: 0;
+    margin-top: 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    overflow-y: auto;
+    height: 100%;
+    
+    pointer-events: none; 
+}
+
+.image-container img, 
+.image-container .content-inner {
+    pointer-events: auto;
+}
+
+/* 画面左 */
+.display-side {
+    flex: 1; /* 均等に分ける */
+    min-width: 0;
+    margin-left: -30px;
+}
+
+h1 {
+    margin-top: 60px;
+    margin-left: 0;
+    gap: 4px;
+
+    font-size: 2.5rem;
+    line-height: 1.1;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.sub-btitle {
+    display: block;
+    margin-top: 5px;
+    font-size: 1rem;
+    color: #333;
+}
+
+.main-display {
+    display: block !important; 
+    position: fixed; 
+
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    margin-top: -50px;
+    
+    width: 80%;      
+    max-width: 380px; 
+    height: auto;
+    
+    z-index: 5;     
+    pointer-events: none;
+    
+    opacity: 0;
+    visibility: hidden;
+}
+
+.close-tab{
+    display: block;
+    visibility: visible;
+    opacity: 1;
+    margin-top: 5px;
+    font-size: 0.8rem;
+}
+
+/* 画面右 */
+.list-side {
+   flex: 1; /* 均等に分ける */
+    min-width: 0;
+    margin-top: 0px;
+    padding-right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; 
+}
+
+.collection-tab, 
+.work-item {
+    display: grid;
+    grid-template-columns: 36px 65px 1fr;
+    text-align: left;
+    width: 100%;
+}
+
+.collection-tab {
+    font-size: 0.8rem;
+    border-bottom: none;
+}
+
+.work-item {
+    font-size: 1.1rem;
+    border-bottom: none;
+}
+
+.work-list {
+    max-width: 100%;
+    margin-top: 40px;
+    gap: 9px;
+}
+
+.text-wrapper {
+    position: fixed; /* 画面下部に固定 */
+    bottom: 60px;    /* footer-infoの高さに合わせる */
+    left: 20px;      
+    right: 20px;     
+    
+    width: calc(100% - 40px) !important; 
+    height: 85px;
+    margin: 0 !important;
+    padding-top: 10px;
+     
+    background-color: transparent;
+    z-index: 1100;
+    border: none;
+}
+
+.text-wrapper span{
+    position: absolute;
+    left: 0;
+    width: 100%;
+    
+    font-size: 1rem;
+    line-height: 1.3;
+    text-align: left;
+
+    transition: all 0.5s ease-in-out;
+}
+
+.footer-container {
+    position: relative;
+    width: 100%;
+    flex-shrink: 0;
+}
+
+.footer-info {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    width: 100%;
+    margin: 0;
+    padding: 10px 0 0 0;
+    gap: 2px 0;
+    border-top: 0.5px solid #333;
+
+    font-size: 1rem;
+}
+
+.footer-info .location,
+.footer-info .tel {
+    width: 100%;
+    text-align: left;
+    font-size: 0.8rem;
+}
+
+.footer-info .mail {
+    width: auto;
+    text-align: left;
+    font-size: 0.8rem;
+}
+
+.footer-info .copyright {
+    width: auto;
+    margin-left: auto;
+    text-align: right;
+    font-size: 0.8rem;
+}
+
+/* 表示非表示要素 */
+.toggle-switch{
+        display: none !important;
+}
+
+.contents-container:has(.main-display.is-active) .list-side .collection-tab,
+.contents-container:has(.main-display.is-active) .list-side .work-list {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+.text-wrapper {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+}
+}
+
